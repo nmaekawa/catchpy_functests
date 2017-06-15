@@ -150,8 +150,35 @@ def test_anno_with_replies(testvars):
 
 
 @pytest.mark.usefixtures('testvars')
-def test_text_
+def test_by_media_userid_contextid(testvars):
+    token = get_token(user=testvars['creator3'], apikey=testvars['api_key'],
+                      secretkey=testvars['secret_key'])
+    header = {'Authorization': 'Token {}'.format(token),
+              'Content-Type': 'application/json'}
+    media = VIDEO
+    userId = testvars['creator2']
+    contextId = 'fake_context'
+    url = '{}media={}&userid={}&contextId={}'.format(
+        API_URL, media, userId, contextId)
+    r = requests.get(url, headers=header)
+    assert r.status_code == 200
 
+    resp = json.loads(r.content)
+    assert resp['total'] == 5
+    for x in resp['rows']:
+        assert x['platform']['contextId'] == contextId
+        assert x['creator']['id'] == userId
+        assert find_media_type(x) == media
+
+
+
+
+
+#
+# TODO: figure a way to gather utilities to deal with wa json
+# without requiring to include django ORM definitions everywhere
+# ex: PURPOSE_TAGGING
+#
 def has_tag(wa, tagname):
     for b in wa['body']['items']:
         if b['purpose'] == PURPOSE_TAGGING:
@@ -165,4 +192,8 @@ def find_reply_to(wa):
         if t['type'] == ANNO:
             return t['source']
     return None
+
+def find_media_type(wa):
+    media_type = wa['target']['items'][0]['type']
+    return IMAGE if media_type == THUMB else media_type
 
