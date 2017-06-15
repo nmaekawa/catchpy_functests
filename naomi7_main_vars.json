@@ -1,10 +1,19 @@
 {
-    "api_key": "463d2d58-f0ed-4809-b7f9-4e6eb518130a",
-    "secret_key": "0d6dee3e-62ec-4c08-a220-f8efea65034f",
+    "api_key": "5b16376c-0455-46c4-8780-bb016ef9e6fc",
+    "api_url": "http://localhost:8000/anno",
     "common_body_text": "strange women lying in ponds distributing swords is no basis for a system of government",
     "common_tag": "supercalifragilisticexpialidocious",
     "common_target_source": "http://hardwork.harvardx.harvard.edu",
-    "creator1": "df8bcb01-dc7b-4b13-8cf4-e252cb3c739c",
-    "creator2": "958635b1-e58d-4f25-8fe6-fb05d3b2bb9f",
-    "creator3": "f8adb760-f8ea-442a-9401-e767fd7a1d18"
+    "creator1": "aca9eebd-843c-4279-9494-4ed0588f6825",
+    "creator2": "6456247a-90b7-4942-904a-d5d2a493da95",
+    "creator3": "59f36b18-f3bc-4b56-8ae5-ae70f402ade0",
+    "reply_to_0": "18da290a-4bd0-4c00-a0d8-e410ac73e106",
+    "reply_to_1": "2774b5da-f50a-4158-b12c-41022a508a71",
+    "reply_to_2": "a82e7c82-a56b-4c83-bb5f-f3319e4109da",
+    "reply_to_3": "f6dcd7a5-c416-4fee-8b42-46df5caf5e0e",
+    "reply_to_4": "468863a8-7f9b-423d-8d74-2b7d88819415",
+    "reply_to_5": "d507de00-2515-459a-8aca-96adedc4deb6",
+    "reply_to_6": "47204e44-d2c6-4fe3-9b9b-4aa59e9505ed",
+    "reply_to_7": "bc64ea3e-7ac7-4129-b5aa-a5f54fa7522d",
+    "secret_key": "d64a565b-be9c-4659-9671-d30dcad9844a"
 }

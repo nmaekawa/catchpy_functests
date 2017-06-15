@@ -44,16 +44,14 @@ def test_userid(testvars):
     header = {'Authorization': 'Token {}'.format(token),
               'Content-Type': 'application/json'}
 
-    url = '{}userid={}&userid={}'.format(API_URL,
-                                         testvars['creator2'],
-                                         testvars['creator3']
-                                        )
+    url = '{}userid={}&userid={}'.format(
+        API_URL, testvars['creator2'], testvars['creator3'])
 
     r = requests.get(url, headers=header)
     assert r.status_code == 200
 
     resp = json.loads(r.content)
-    assert resp['total'] == (28 + 12)
+    assert resp['total'] == 48
     assert resp['size'] == 10
 
 
@@ -70,7 +68,7 @@ def test_username(testvars):
     assert r.status_code == 200
 
     resp = json.loads(r.content)
-    assert resp['total'] == 12
+    assert resp['total'] == 28
     assert resp['size'] == 10
 
 
@@ -128,8 +126,31 @@ def test_replies(testvars):
     assert r.status_code == 200
 
     resp = json.loads(r.content)
-    assert resp['total'] == 12
+    assert resp['total'] == 28
 
+
+@pytest.mark.usefixture('testvars')
+def test_anno_with_replies(testvars):
+    token = get_token(user=testvars['creator3'], apikey=testvars['api_key'],
+                      secretkey=testvars['secret_key'])
+    header = {'Authorization': 'Token {}'.format(token),
+              'Content-Type': 'application/json'}
+
+    number_of_replies = 5
+    index = 'reply_to_{}'.format(number_of_replies)
+    url = '{}sourceId={}&limit=-1'.format( API_URL, testvars[index])
+
+    r = requests.get(url, headers=header)
+    assert r.status_code == 200
+
+    resp = json.loads(r.content)
+    for x in resp['rows']:
+        assert x['platform']['target_source_id'] == testvars[index]
+    assert resp['total'] == number_of_replies
+
+
+@pytest.mark.usefixtures('testvars')
+def test_text_
 
 def has_tag(wa, tagname):
     for b in wa['body']['items']:

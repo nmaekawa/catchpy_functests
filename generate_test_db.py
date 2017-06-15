@@ -45,10 +45,10 @@ class DataGeneratorForCatchpy(object):
         return token
 
 
-    def generate_set(self, size=1, user=None, media=TEXT):
+    def generate_set(self, size=1, user=None, media=TEXT, reply_to=None):
         wa_set = []
         for i in range(0, size):
-            wa_set.append(make_wa_object(1, media, user=user))
+            wa_set.append(make_wa_object(1, media, user=user, reply_to=reply_to))
 
         return wa_set
 
@@ -130,40 +130,41 @@ class DataGeneratorForCatchpy(object):
         common_target_source = params['common_target_source']
         common_body_text = params['common_body_text']
 
-        # creator1 and creator2 have 3 annotations of each type
-        set1 = []
+        # creator1 and creator2 have 1 annotation of each type
+        set1 = []  # 4 annot each
         for creator in [creator1, creator2]:
             for media in DataGeneratorForCatchpy.MEDIAS:
-                set1 += self.generate_set(size=3, user=creator, media=media)
-        for wa in set1:
+                set1 += self.generate_set(size=1, user=creator, media=media)
+        set2 = []
+        for i in range(0, len(set1)):
+            wa = set1[i]
             r = self.send_create(wa)
+            set2 += self.generate_set(
+                size=i, user=creator3, media=ANNO, reply_to=wa['id'])
+            params['reply_to_{}'.format(i)] = wa['id']
 
-        # creator3 makes replies
-        max_index = len(self._created) - 1
-        for i in range(0, 12):
-            reply_to = set1[randint(0, max_index)]
-            w = make_wa_object(age_in_hours=1, media=ANNO,
-                               reply_to=reply_to['id'], user=creator3)
-            r = self.send_create(w)
+        # creator3 send i replies to each of annotations above
+        for wa in set2:  # 28 annot for creator3
+            r = self.send_create(wa)
 
         # set with same tag
         set3 = []
         for creator in [creator1, creator2]:
             set3 += self.generate_set_assorted_media(size=2, user=creator)
         set3 = self.add_tag(set3, common_tag)
-        for wa in set3:
+        for wa in set3:  # 8 each
             r = self.send_create(wa)
 
         # set with same target_source
         set4 = self.generate_set_assorted_media(size=2, user=creator1)
         set4 = self.replace_target_source(set4, common_target_source)
-        for wa in set4:
+        for wa in set4:  # 8 for creator1
             r = self.send_create(wa)
 
         # set with same body_text
         set5 = self.generate_set_assorted_media(size=2, user=creator2)
         set5 = self.replace_body_text(set5, common_body_text)
-        for wa in set5:
+        for wa in set5:  # 8 for creator2
             r = self.send_create(wa)
 
 
@@ -177,15 +178,16 @@ if __name__ == '__main__':
         'common_body_text': ('strange women lying in ponds distributing swords '
                              'is no basis for a system of government'),
     }
+    keys = {
+        'api_url': 'http://localhost:8000/anno',
+        'api_key': '5b16376c-0455-46c4-8780-bb016ef9e6fc',
+        'secret_key': 'd64a565b-be9c-4659-9671-d30dcad9844a',
+    }
 
-    generator = DataGeneratorForCatchpy(
-        api_url='http://localhost:8000/anno',
-        api_key='463d2d58-f0ed-4809-b7f9-4e6eb518130a',
-        secret_key='0d6dee3e-62ec-4c08-a220-f8efea65034f'
-    )
-
+    generator = DataGeneratorForCatchpy(**keys)
     generator.do_create_set(params)
 
+    params.update(keys)
     print(json.dumps(params, sort_keys=True, indent=4))
     print('\nDONE!\n')
 
