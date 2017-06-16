@@ -13,6 +13,9 @@ from anno.tests.conftest import make_jwt_payload
 from anno.tests.conftest import make_encoded_token
 
 
+API_URL = 'http://localhost:8000/anno'
+
+
 def get_token(user, apikey, secretkey):
     payload = make_jwt_payload(apikey, user=user)
     token = make_encoded_token(secret=secretkey, payload=payload)

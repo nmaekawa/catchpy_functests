@@ -3,13 +3,12 @@ import requests
 import os
 import pytest
 
-from utils import get_token
-from utils import has_tag
-from utils import find_reply_to
-from utils import find_media_type
+from .utils import get_token
+from .utils import has_tag
+from .utils import find_reply_to
+from .utils import find_media_type
+from .utils import API_URL
 
-
-API_URL = 'http://localhost:8000/anno/search?'
 
 
 @pytest.fixture(scope='module')
@@ -30,7 +29,7 @@ def test_userid(testvars):
     header = {'Authorization': 'Token {}'.format(token),
               'Content-Type': 'application/json'}
 
-    url = '{}userid={}&userid={}'.format(
+    url = '{}/search?userid={}&userid={}'.format(
         API_URL, testvars['creator2'], testvars['creator3'])
 
     r = requests.get(url, headers=header)
@@ -48,7 +47,7 @@ def test_username(testvars):
     header = {'Authorization': 'Token {}'.format(token),
               'Content-Type': 'application/json'}
 
-    url = '{}username=user_{}'.format(API_URL, testvars['creator3'])
+    url = '{}/search?username=user_{}'.format(API_URL, testvars['creator3'])
 
     r = requests.get(url, headers=header)
     assert r.status_code == 200
@@ -65,7 +64,7 @@ def test_tags(testvars):
     header = {'Authorization': 'Token {}'.format(token),
               'Content-Type': 'application/json'}
 
-    url = '{}tag={}&limit=-1'.format(API_URL, testvars['common_tag'])
+    url = '{}/search?tag={}&limit=-1'.format(API_URL, testvars['common_tag'])
 
     r = requests.get(url, headers=header)
     assert r.status_code == 200
@@ -88,7 +87,7 @@ def test_tags(testvars):
     assert count[1] == 8
     assert count[2] == 0
 
-    url = '{}tag={}&userid={}'.format(
+    url = '{}/search?tag={}&userid={}'.format(
         API_URL, testvars['common_tag'], testvars['creator2'])
     r = requests.get(url, headers=header)
     assert r.status_code == 200
@@ -106,7 +105,7 @@ def test_replies(testvars):
     header = {'Authorization': 'Token {}'.format(token),
               'Content-Type': 'application/json'}
 
-    url = '{}media=Annotation&limit=-1'.format(API_URL)
+    url = '{}/search?media=Annotation&limit=-1'.format(API_URL)
 
     r = requests.get(url, headers=header)
     assert r.status_code == 200
@@ -124,7 +123,7 @@ def test_anno_with_replies(testvars):
 
     number_of_replies = 5
     index = 'reply_to_{}'.format(number_of_replies)
-    url = '{}sourceId={}&limit=-1'.format( API_URL, testvars[index])
+    url = '{}/search?sourceId={}&limit=-1'.format( API_URL, testvars[index])
 
     r = requests.get(url, headers=header)
     assert r.status_code == 200
@@ -144,7 +143,7 @@ def test_by_media_userid_contextid(testvars):
     media = 'Video'
     userId = testvars['creator2']
     contextId = 'fake_context'
-    url = '{}media={}&userid={}&contextId={}'.format(
+    url = '{}/search?media={}&userid={}&contextId={}'.format(
         API_URL, media, userId, contextId)
     r = requests.get(url, headers=header)
     assert r.status_code == 200
